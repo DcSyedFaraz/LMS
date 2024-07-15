@@ -29,19 +29,16 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        $user = Auth::guard()->user()->getRoleNames();  
+        $user = Auth::guard()->user()->getRoleNames();
 
 
-        switch ($user[0]){
-            case 'admin':
-                return redirect()->route('dashboard.index');
-            case 'Teacher':
-                return redirect()->route('teacher.index');
-            case 'student':
-                return redirect()->route('student.index');
-            default:
-             return redirect()->route('home');
-        }
+        return redirect()->route('dashboard.index');
+        // return match ($user[0]) {
+        //     'admin' => redirect()->route('dashboard.index'),
+        //     'Teacher' => redirect()->route('teacher.index'),
+        //     'student' => redirect()->route('student.index'),
+        //     default => redirect()->route('home'),
+        // };
 
     }
 

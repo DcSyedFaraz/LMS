@@ -1,10 +1,6 @@
 @extends('admin.layout.master')
 @section('content')
 
-
-    <div class="content-page">
-        <div class="content">
-
             <!-- Start Content-->
             <div class="container-xxl">
 
@@ -21,23 +17,13 @@
                     </div>
                 </div>
 
-                @if (Session::has('error'))
-                    <p class="alert alert-info">{{ Session::get('error') }}</p>
-                @endif
-
-                @if ($message = Session::get('success'))
-                    <div class="alert alert-success">
-                        <p>{{ $message }}</p>
-                    </div>
-                @endif
-
                 <!-- Datatables  -->
                 <div class="user">
                     <div class="col-12">
                         <div class="card">
 
                             <div class="card-header">
-                                <h5 class="card-title mb-0">users List</h5>
+                                <h5 class="card-title mb-0">Users List</h5>
                                 <a href="/admin/users/create" class="btn btn-primary mt-3">Create</a>
 
                             </div><!-- end card header -->
@@ -54,31 +40,30 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php
-                                            $id = 1;
-                                        @endphp
-                                        @foreach ($users as $user)
+
+                                        @foreach ($users as $key => $user)
                                             <tr>
-                                                <td>{{ $id++ }}</td>
+                                                <td>{{ $key + 1 }}</td>
                                                 <td>{{ $user->name }}</td>
                                                 <td>{{ $user->email }}</td>
                                                 <td>
                                                     @if ($user->getRoleNames()->isNotEmpty())
-                                                        {{ $user->getRoleNames() }}
+                                                        {{-- {{ $user->getRoleNames() }} --}}
                                                         @foreach ($user->getRoleNames() as $v)
-                                                            <label class="badge badge-success"> {{ $v[0] }}</label>
+                                                            <label class="badge bg-success text-capitalize">
+                                                                {{ $v }}</label>
                                                         @endforeach
                                                     @endif
                                                 </td>
-                                                <td>
+                                                <td class="d-flex gap-2">
 
-                                                    <a class="btn btn-primary" href="{{ route('users.edit', ['user' => $user->id]) }}">Edit</a>
-                                                </td>
-                                                <td>
+                                                    <a class="btn btn-primary"
+                                                        href="{{ route('users.edit', ['user' => $user->id]) }}">Edit</a>
                                                     <form method="POST" action="{{ route('users.destroy', $user->id) }}">
                                                         @csrf
                                                         @method('delete')
-                                                        <button class="btn btn-danger" onclick="return confirm('Are You sure you want to delete this?')">Delete</button>
+                                                        <button class="btn btn-danger"
+                                                            onclick="return confirm('Are You sure you want to delete this?')">Delete</button>
                                                     </form>
                                                 </td>
 
@@ -93,6 +78,5 @@
 
                 </div>
             </div>
-        </div>
-    </div>
+       
 @endsection

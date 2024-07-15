@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\LibraryController;
 use App\Http\Controllers\Admin\TeacherDashboardController;
 use App\Http\Controllers\Admin\StudentDashboardController;
 use App\Http\Controllers\Admin\PermissionController;
@@ -28,24 +29,31 @@ Route::get('/', function () {
     return view('auth/login');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 // Dashboard and Logout routes
 Route::middleware(['auth'])->group(function () {
-    Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
-    Route::get('teacher/dashboard', [TeacherDashboardController::class, 'index'])->name('teacher.index')->middleware('auth');
-    Route::get('student/dashboard', [StudentDashboardController::class, 'index'])->name('student.index')->middleware('auth');
+    Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('teacher/dashboard', [TeacherDashboardController::class, 'index'])->name('teacher.index');
+    Route::get('student/dashboard', [StudentDashboardController::class, 'index'])->name('student.index');
     Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
     Route::get('/home', [AuthenticatedSessionController::class, 'home'])->name('home');
 });
 
 
-Route::resource('admin/roles', RoleController::class);
-Route::resource('admin/permission', PermissionController::class);
-Route::resource('admin/users', UserController::class);
 
-// Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:Admin']], function () {
-// });
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:admin']], function () {
+
+    Route::resource('roles', RoleController::class);
+    Route::resource('permission', PermissionController::class);
+    Route::resource('users', UserController::class);
+    Route::get('/library/delete/{library}', [LibraryController::class, 'destroy'])->name('library.destroy');
+});
+Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'role:teacher|student|admin']], function () {
+
+    Route::resource('library', LibraryController::class)->except('destroy');
+    Route::get('/library/delete/{library}', [LibraryController::class, 'destroy'])->name('library.destroy');
+});
 
 
 

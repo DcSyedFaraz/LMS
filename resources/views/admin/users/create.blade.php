@@ -1,9 +1,7 @@
 @extends('admin.layout.master')
 @section('content')
     <!-- Start Content-->
-    <div class="content-page">
-        <div class="content">
-
+  
             <!-- Start Content-->
             <div class="container-xxl">
 
@@ -21,7 +19,7 @@
                 </div>
 
                 @if (Session::has('error'))
-                    <p class="alert alert-info">{{ Session::get('error') }}</p>
+                    <p class="alert alert-danger">{{ Session::get('error') }}</p>
                 @endif
 
                 @if ($message = Session::get('success'))
@@ -92,10 +90,10 @@
                                                 {{-- @dd(config('permission.teams')); // This should output `false` --}}
 
                                                 <strong>Role:</strong>
-                                                <select name="roles" class="form-control my-2" required>
-                                                    <option>select role</option>
+                                                <select name="roles" class="form-control my-2 text-capitalize" required>
+                                                    <option>Select role</option>
                                                     @foreach ($roles as $role)
-                                                        <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                                        <option value="{{ $role->name }}" class="text-capitalize">{{ $role->name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -111,6 +109,5 @@
                 </div>
 
             </div>
-        </div>
-    </div>
+
 @endsection

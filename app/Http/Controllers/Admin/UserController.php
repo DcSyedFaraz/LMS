@@ -52,11 +52,11 @@ class UserController extends Controller
 
             DB::commit();
             return redirect()->route('users.index')
-            ->with('success', 'User Create successfully');
+                ->with('success', 'User Create successfully');
 
         } catch (\Exception $e) {
             DB::rollback();
-
+            throw $e;
             return redirect()->back()->with('error', 'An error occurred while creating the checklist. Please try again or contact support for assistance.');
         }
     }
@@ -84,8 +84,8 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'same:confirm-password',
+            'email' => "required|email|unique:users,email,$id",
+            'password' => 'nullable| same:confirm-password',
             'roles' => 'required'
         ]);
 
@@ -93,15 +93,13 @@ class UserController extends Controller
         if (!empty($input['password'])) {
             $input['password'] = Hash::make($input['password']);
         } else {
-            $input = Arr::except($input, array('password'));
+            $input = Arr::except($input, ['password']);
         }
 
         $user = User::find($id);
         $user->update($input);
-        DB::table('model_has_roles')->where('model_id', $id)->delete();
 
-        $role = Role::where('id', $request->roles)->first();
-        $user->syncRoles($role);
+        $user->syncRoles($request->roles);
 
         return redirect()->route('users.index')
             ->with('success', 'User updated successfully');

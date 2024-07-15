@@ -1,8 +1,6 @@
 @extends('admin.layout.master')
 @section('content')
     <!-- Start Content-->
-    <div class="content-page">
-        <div class="content">
 
             <!-- Start Content-->
             <div class="container-xxl">
@@ -75,10 +73,10 @@
                                                 {{-- @dd(config('permission.teams')); // This should output `false` --}}
 
                                                 <strong>Role:</strong>
-                                                <select name="roles" class="form-control my-2" required>
-                                                    <option>select role</option>
+                                                <select name="roles" class="form-control my-2 text-capitalize" required>
+                                                    <option>Select role</option>
                                                     @foreach ($roles as $role)
-                                                    <option value="{{ $role->id }}" {{ in_array($role->name, $userRole) ? 'selected' : '' }}>{{ $role->name }}</option>
+                                                    <option value="{{ $role->name }}" {{ in_array($role->name, $userRole) ? 'selected' : '' }} class="text-capitalize">{{ $role->name }}</option>
 
                                                     @endforeach
                                                 </select>
@@ -95,6 +93,5 @@
                 </div>
 
             </div>
-        </div>
-    </div>
+
 @endsection
